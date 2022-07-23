@@ -1,9 +1,8 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -12,8 +11,10 @@ import javax.validation.constraints.NotNull;
  * // TODO .
  */
 @Data
-@AllArgsConstructor
-public class ItemDto {
+@NoArgsConstructor
+public class Item {
+
+    private int id;
     @NotNull
     @NotEmpty
     private String name;
@@ -22,5 +23,7 @@ public class ItemDto {
     private String description;
     @NotNull
     private Boolean available;
+    @NotNull
+    private int owner;
     private int request;
 }
