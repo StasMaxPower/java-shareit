@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ItemServiceImpl implements ItemService{
+public class ItemServiceImpl implements ItemService {
     private final ItemStorage itemStorage;
     private final UserService userService;
-    private  int id;
+    private int id;
 
     @Override
     public ItemDto add(Item item, int owner) {
@@ -45,13 +45,13 @@ public class ItemServiceImpl implements ItemService{
     public ItemDto updateToId(Item newItem, int id, int owner) {
         log.info("Запрос на обновление вещи с ID = {} получен", id);
         Item item = itemStorage.getToId(id);
-        if (item.getOwner()!= owner)
+        if (item.getOwner() != owner)
             throw new NotFoundException("Invalid user");
         if (newItem.getName() != null)
             item.setName(newItem.getName());
-        if(newItem.getAvailable()!= null)
+        if (newItem.getAvailable() != null)
             item.setAvailable(newItem.getAvailable());
-        if ((newItem.getDescription()!= null))
+        if ((newItem.getDescription() != null))
             item.setDescription(newItem.getDescription());
         return ItemMapper.toItemDto(itemStorage.add(item));
     }

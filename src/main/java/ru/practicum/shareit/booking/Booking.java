@@ -17,5 +17,5 @@ public class Booking {
     private LocalDate end;
     private int item;
     private int booker;
-    private String Status;
+    private String status;
 }

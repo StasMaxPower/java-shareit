@@ -7,6 +7,7 @@ import java.util.Collection;
 
 public interface UserService {
     UserDto addUser(User user);
+
     Collection<UserDto> getAll();
 
     UserDto delete(int id);

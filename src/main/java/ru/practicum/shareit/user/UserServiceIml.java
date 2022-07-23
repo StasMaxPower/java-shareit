@@ -16,9 +16,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class UserServiceIml implements UserService{
+public class UserServiceIml implements UserService {
     private final InMemoryUserStorage userStorage;
     private int id;
+
     @Override
     public UserDto addUser(User user) {
         log.info("Запрос на добавление пользователей получен");
@@ -55,23 +56,23 @@ public class UserServiceIml implements UserService{
     }
 
 
-    void checkUserEmail(User user){
+    void checkUserEmail(User user) {
         checkDuplicateEmail(user);
-        if (user.getEmail() == null || user.getEmail().isBlank()||(!user.getEmail().contains("@"))) {
+        if (user.getEmail() == null || user.getEmail().isBlank() || (!user.getEmail().contains("@"))) {
             log.info("Неверно указана электронная почта");
             throw new ValidateException("Неверно указана электронная почта");
         }
     }
 
-    void checkDuplicateEmail(User user){
-        if (userStorage.getAll().stream().anyMatch(u->u.getEmail().equals(user.getEmail()))) {
+    void checkDuplicateEmail(User user) {
+        if (userStorage.getAll().stream().anyMatch(u -> u.getEmail().equals(user.getEmail()))) {
             log.info("Пользователь с таким Email уже существует");
             throw new DublicateEmailException("Пользователь с таким Email уже существует");
         }
     }
 
-    public void checkUserToId(int id){
-        if (getAll().stream().noneMatch(user->user.getId() == id))
+    public void checkUserToId(int id) {
+        if (getAll().stream().noneMatch(user -> user.getId() == id))
             throw new NotFoundException("Пользователь с таким ID не найден");
     }
 }

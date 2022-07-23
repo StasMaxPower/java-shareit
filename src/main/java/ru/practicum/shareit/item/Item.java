@@ -2,8 +2,6 @@ package ru.practicum.shareit.item;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
