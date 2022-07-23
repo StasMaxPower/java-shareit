@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +24,8 @@ public class ItemStorage {
     }
 
     public Collection<Item> getAllToOwner(int owner){
-        return items.values().stream().filter(item -> item.getOwner() == owner)
+        return items.values().stream()
+                .filter(item -> item.getOwner() == owner)
                 .collect(Collectors.toList());
     }
 

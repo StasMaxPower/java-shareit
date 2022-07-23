@@ -7,8 +7,11 @@ import ru.practicum.shareit.exception.DublicateEmailException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidateException;
 import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,36 +20,38 @@ public class UserServiceIml implements UserService{
     private final InMemoryUserStorage userStorage;
     private int id;
     @Override
-    public User addUser(User user) {
+    public UserDto addUser(User user) {
         log.info("Запрос на добавление пользователей получен");
         checkUserEmail(user);
         user.setId(++id);
-        return userStorage.add(user);
+        return UserMapper.toUserDto(userStorage.add(user));
     }
 
     @Override
-    public Collection<User> getAll() {
+    public Collection<UserDto> getAll() {
         log.info("Запрос на вывод пользователей получен");
-        return userStorage.getAll();
+        return userStorage.getAll().stream()
+                .map(UserMapper::toUserDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public User delete(int id) {
+    public UserDto delete(int id) {
         log.info("Запрос на удаление пользователей получен");
-        return userStorage.delete(id);
+        return UserMapper.toUserDto(userStorage.delete(id));
     }
 
     @Override
-    public User getToId(int id) {
+    public UserDto getToId(int id) {
         log.info("Запрос на вывод пользователей по ID получен");
-        return userStorage.getToId(id);
+        return UserMapper.toUserDto(userStorage.getToId(id));
     }
 
     @Override
-    public User updateToId(int id, User user) {
+    public UserDto updateToId(int id, User user) {
         log.info("Запрос на обновление пользователей по ID получен");
         checkDuplicateEmail(user);
-        return userStorage.update(id, user);
+        return UserMapper.toUserDto(userStorage.update(id, user));
     }
 
 
