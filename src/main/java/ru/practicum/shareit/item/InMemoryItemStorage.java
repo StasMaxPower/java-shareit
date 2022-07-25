@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,15 +9,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class ItemStorage {
+public class InMemoryItemStorage {
     private final Map<Integer, Item> items = new HashMap<>();
+    private int id;
 
     public Item add(Item item) {
+        item.setId(++id);
         items.put(item.getId(), item);
         return item;
     }
 
-    public Item getToId(int id) {
+    public Item getById(int id) {
         return items.get(id);
     }
 
@@ -36,4 +39,8 @@ public class ItemStorage {
                 .collect(Collectors.toList());
     }
 
+    public Item update(Item item) {
+        items.put(item.getId(), item);
+        return item;
+    }
 }

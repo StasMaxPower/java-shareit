@@ -10,8 +10,10 @@ import java.util.Map;
 @Component
 public class InMemoryUserStorage {
     private Map<Integer, User> users = new HashMap<>();
+    private int id;
 
     public User add(User user) {
+        user.setId(++id);
         users.put(user.getId(), user);
         return user;
     }
@@ -21,21 +23,16 @@ public class InMemoryUserStorage {
     }
 
     public User delete(int id) {
-        User user = getToId(id);
+        User user = getById(id);
         users.remove(id);
         return user;
     }
 
-    public User getToId(int id) {
+    public User getById(int id) {
         return users.get(id);
     }
 
-    public User update(int id, User newUser) {
-        User user = getToId(id);
-        if (newUser.getEmail() != null)
-            user.setEmail(newUser.getEmail());
-        if (newUser.getName() != null)
-            user.setName(newUser.getName());
+    public User update(User user) {
         users.put(user.getId(), user);
         return user;
     }

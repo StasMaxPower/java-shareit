@@ -15,23 +15,22 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-    private final ItemStorage itemStorage;
+    private final InMemoryItemStorage itemStorage;
     private final UserService userService;
-    private int id;
 
     @Override
-    public ItemDto add(Item item, int owner) {
+    public ItemDto add(ItemDto itemDto, int owner) {
+        Item item = ItemMapper.toItem(itemDto);
         item.setOwner(owner);
         userService.checkUserToId(item.getOwner());
         log.info("Запрос на добавление новой вещи получен");
-        item.setId(++id);
         return ItemMapper.toItemDto(itemStorage.add(item));
     }
 
     @Override
-    public ItemDto getItemToId(int id) {
+    public ItemDto getItemById(int id) {
         log.info("Запрос на вывод вещи по ID получен");
-        return ItemMapper.toItemDto(itemStorage.getToId(id));
+        return ItemMapper.toItemDto(itemStorage.getById(id));
     }
 
     @Override
@@ -42,9 +41,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto updateToId(Item newItem, int id, int owner) {
+    public ItemDto updateById(ItemDto newItem, int id, int owner) {
         log.info("Запрос на обновление вещи с ID = {} получен", id);
-        Item item = itemStorage.getToId(id);
+        Item item = itemStorage.getById(id);
         if (item.getOwner() != owner)
             throw new NotFoundException("Invalid user");
         if (newItem.getName() != null)
@@ -53,7 +52,7 @@ public class ItemServiceImpl implements ItemService {
             item.setAvailable(newItem.getAvailable());
         if ((newItem.getDescription() != null))
             item.setDescription(newItem.getDescription());
-        return ItemMapper.toItemDto(itemStorage.add(item));
+        return ItemMapper.toItemDto(itemStorage.update(item));
     }
 
     @Override

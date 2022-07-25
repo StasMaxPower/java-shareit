@@ -18,8 +18,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public UserDto addUser(@RequestBody @Valid User user) {
-        return userService.addUser(user);
+    public UserDto addUser(@RequestBody @Valid UserDto userDto) {
+        return userService.addUser(userDto);
     }
 
     @GetMapping
@@ -34,12 +34,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDto getUserToID(@PathVariable int id) {
-        return userService.getToId(id);
+    public UserDto getUserByID(@PathVariable int id) {
+        return userService.getById(id);
     }
 
     @PatchMapping("/{id}")
-    public UserDto updateUserToId(@PathVariable int id, @RequestBody User user) {
-        return userService.updateToId(id, user);
+    public UserDto updateUserById(@PathVariable int id, @RequestBody UserDto userDto) {
+        return userService.updateById(id, userDto);
     }
 }

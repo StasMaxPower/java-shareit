@@ -17,13 +17,13 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
-    public ItemDto addItem(@RequestBody @Valid Item item, @RequestHeader("X-Sharer-User-Id") int owner) {
-        return itemService.add(item, owner);
+    public ItemDto addItem(@RequestBody @Valid ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") int owner) {
+        return itemService.add(itemDto, owner);
     }
 
     @GetMapping("/{id}")
-    public ItemDto getItemToId(@PathVariable int id) {
-        return itemService.getItemToId(id);
+    public ItemDto getItemById(@PathVariable int id) {
+        return itemService.getItemById(id);
     }
 
     @GetMapping
@@ -32,9 +32,9 @@ public class ItemController {
     }
 
     @PatchMapping("/{id}")
-    public ItemDto updateItemToId(@PathVariable int id, @RequestHeader("X-Sharer-User-Id") int owner,
-                                  @RequestBody Item item) {
-        return itemService.updateToId(item, id, owner);
+    public ItemDto updateItemById(@PathVariable int id, @RequestHeader("X-Sharer-User-Id") int owner,
+                                  @RequestBody ItemDto itemDto) {
+        return itemService.updateById(itemDto, id, owner);
     }
 
     @GetMapping("/search")

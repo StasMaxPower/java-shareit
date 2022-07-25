@@ -16,15 +16,14 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class UserServiceIml implements UserService {
+public class UserServiceImpl implements UserService {
     private final InMemoryUserStorage userStorage;
-    private int id;
 
     @Override
-    public UserDto addUser(User user) {
+    public UserDto addUser(UserDto userDto) {
         log.info("Запрос на добавление пользователей получен");
+        User user = UserMapper.toUser(userDto);
         checkUserEmail(user);
-        user.setId(++id);
         return UserMapper.toUserDto(userStorage.add(user));
     }
 
@@ -43,16 +42,22 @@ public class UserServiceIml implements UserService {
     }
 
     @Override
-    public UserDto getToId(int id) {
+    public UserDto getById(int id) {
         log.info("Запрос на вывод пользователей по ID получен");
-        return UserMapper.toUserDto(userStorage.getToId(id));
+        return UserMapper.toUserDto(userStorage.getById(id));
     }
 
     @Override
-    public UserDto updateToId(int id, User user) {
+    public UserDto updateById(int id, UserDto userDto) {
         log.info("Запрос на обновление пользователей по ID получен");
-        checkDuplicateEmail(user);
-        return UserMapper.toUserDto(userStorage.update(id, user));
+        User newUser = UserMapper.toUser(userDto);
+        checkDuplicateEmail(newUser);
+        User user = userStorage.getById(id);
+        if (newUser.getEmail() != null)
+            user.setEmail(newUser.getEmail());
+        if (newUser.getName() != null)
+            user.setName(newUser.getName());
+        return UserMapper.toUserDto(userStorage.update(user));
     }
 
 
