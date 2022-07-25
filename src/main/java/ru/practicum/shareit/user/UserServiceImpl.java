@@ -6,10 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.DublicateEmailException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidateException;
-import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
-
 import java.util.Collection;
 import java.util.stream.Collectors;
 
