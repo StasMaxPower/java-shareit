@@ -29,8 +29,6 @@ public class InMemoryItemStorage {
     }
 
     public Collection<Item> search(String text) {
-        if (text.equals(""))
-            return new ArrayList<>();
         return items.values().stream()
                 .filter(item -> item.getName().toLowerCase().contains(text.toLowerCase()) ||
                         item.getDescription().toLowerCase().contains(text.toLowerCase()))

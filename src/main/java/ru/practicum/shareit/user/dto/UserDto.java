@@ -16,6 +16,6 @@ public class UserDto {
     private int id;
     private String name;
     @Email
-    @NotNull
+    @NotNull(message = "произошла ошибка. Имя пользователя отсутствует")
     private String email;
 }
