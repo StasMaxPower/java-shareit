@@ -38,10 +38,8 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
-        //return Map.of("Ошибка", "Unknown state: UNSUPPORTED_STATUS");
-        //throw new RuntimeException("Unknown state: UNSUPPORTED_STATUS");
-        return new ErrorResponse("Unknown state: UNSUPPORTED_STATUS");
+    public Map<String, String> methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        return Map.of("error", "Unknown state: UNSUPPORTED_STATUS");
     }
 
 /*

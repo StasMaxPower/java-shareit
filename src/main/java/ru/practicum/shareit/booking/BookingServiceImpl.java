@@ -33,10 +33,12 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto create(BookingDto bookingDto, int booker, int userId) {
         Item item = itemRepository.findById(bookingDto.getItemId())
                 .orElseThrow(() -> new NotFoundException("Не найдена вещь"));
+        if (booker == item.getOwner())
+            throw new NotFoundException("Нельзя брать в аренду вещь у самого себя");
         if (!item.getAvailable())
             throw new ValidateException("Вещь недоступна для аренды");
         if (bookingDto.getStart().isBefore(LocalDateTime.now()) ||
-                bookingDto.getStart().isBefore(LocalDateTime.now()))
+                bookingDto.getStart().isBefore(LocalDateTime.now())||bookingDto.getStart() == bookingDto.getEnd())
             throw new ValidateException("Некоректные дата и время начала или окончания бронирования");
         if (!itemRepository.existsById(bookingDto.getItemId()) || !(userRepository.existsById(userId)))
             throw new NotFoundException("Не найдена вещь или пользователь");
@@ -50,18 +52,24 @@ public class BookingServiceImpl implements BookingService {
     public BookingDtoToOut verificateStatus(int bookingId, boolean approved, int userId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Не найден booking c ID = " + bookingId));
+        if (booking.getStatus() == Status.APPROVED)
+            throw new ValidateException("Подтвержденный статус изменить нельзя");
         User booker = userRepository.findById(booking.getBooker())
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
         Item item = itemRepository.findById(booking.getItemId()).orElseThrow();//проверка на владельца
         if (item.getOwner() != userId)
-            throw new ValidateException("Только владелец может менять статус бронирования");
+            throw new NotFoundException("Только владелец может менять статус бронирования");
 
         if (approved)
             booking.setStatus(Status.APPROVED);
         else
             booking.setStatus(Status.REJECTED);
-        bookingRepository.save(booking);
+        booking = bookingRepository.save(booking);
+
+        //item.setAvailable(false);
+       // itemRepository.save(item);
+
         return new BookingDtoToOut(
                 booking.getId(),
                 booking.getStart(),

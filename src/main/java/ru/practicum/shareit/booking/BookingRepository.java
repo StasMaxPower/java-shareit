@@ -29,11 +29,12 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     @Query("select b from Booking b, Item i where b.itemId=i.id and i.owner=?1 and b.start>?2 order by b.start desc")
     List<Booking> findBookingByOwnerFuture(int owner, LocalDateTime localDateTime);
 
-    @Query("select b from Booking b, Item i where b.itemId=i.id and i.owner=?1 and b.start>?2 " +
-            "and b.end<?3 order by b.start desc")
+    @Query("select b from Booking b, Item i where b.itemId=i.id and i.owner=?1 and b.start<?2 " +
+            "and b.end>?3 order by b.start desc")
     List<Booking> findBookingByOwnerCurrent(int owner, LocalDateTime localDateTimeStart,
                                             LocalDateTime localDateTimeEnd);
     @Query("select b from Booking b, Item i where b.itemId=i.id and i.owner=?1 and b.status=?2  order by b.start desc")
     List<Booking> findBookingByOwnerWaiting(int owner, Status status);
 
+    boolean existsBookingByIdAndAndItemIdAndEndBefore(int id, int itemId, LocalDateTime localDateTime);
 }

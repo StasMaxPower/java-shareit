@@ -1,12 +1,16 @@
 package ru.practicum.shareit.item;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.booking.Booking;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * // TODO .
@@ -35,4 +39,5 @@ public class Item {
     private int owner;
     @Column(name = "request_id", nullable = false)
     private int request;
+
 }

@@ -3,13 +3,21 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.ValidateException;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.UserService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -18,6 +26,9 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemStorage;
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+    private final BookingRepository bookingRepository;
 
     @Override
     public ItemDto add(ItemDto itemDto, int owner) {
@@ -72,4 +83,19 @@ public class ItemServiceImpl implements ItemService {
 //                .map(ItemMapper::toItemDto)
 //                .collect(Collectors.toList());
     }
+    @Override
+    public CommentDto addComment(CommentDto commentDto, int owner, int itemId){
+        if (!bookingRepository.existsBookingByIdAndAndItemIdAndEndBefore(owner, itemId, LocalDateTime.now()))
+            throw new ValidateException("Такого букинга не существует");
+        Comment comment = CommentMapper.toComment(commentDto);
+        comment.setItemId(itemId);
+        comment.setAuthor(owner);
+        User user = userRepository.findById(owner).orElseThrow(()->new NotFoundException("пользователя с таким ID нет"));
+        comment = commentRepository.save(comment);
+        return  CommentMapper.toCommentDto(comment, user.getName());
+    }
+
+/*    public Set<Comment> getCommentByItem(int itemId){
+        return commentRepository.findCommentByItem(itemId);
+    }*/
 }
