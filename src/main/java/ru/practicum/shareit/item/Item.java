@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.dto.ShortBooking;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -40,4 +42,12 @@ public class Item {
     @Column(name = "request_id", nullable = false)
     private int request;
 
+    @OneToMany(mappedBy = "itemId", fetch = FetchType.LAZY)
+    //@JsonIgnore
+    private List<Comment> comments;
+
+    @Transient
+    private ShortBooking lastBooking;
+    @Transient
+    private ShortBooking nextBooking;
 }

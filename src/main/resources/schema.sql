@@ -40,6 +40,7 @@ create table if not exists comments (
     text VARCHAR(255) NOT NULL,
     item_id BIGINT,
     author_id BIGINT,
-    created TIMESTAMP WITHOUT TIME ZONE
+    created TIMESTAMP WITHOUT TIME ZONE,
+        CONSTRAINT fk_comments_author_id FOREIGN KEY (author_id) REFERENCES users (id)
 );
 

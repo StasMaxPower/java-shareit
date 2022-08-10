@@ -3,14 +3,14 @@ package ru.practicum.shareit.booking;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingDtoToIn;
 import ru.practicum.shareit.booking.dto.BookingDtoToOut;
-import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.booking.dto.BookingMaper;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidateException;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemRepository;
-import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.dto.ItemMaper;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.dto.UserMapper;
@@ -28,9 +28,11 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final ItemMaper itemMaper;
+    private final BookingMaper bookingMaper;
 
     @Override
-    public BookingDto create(BookingDto bookingDto, int booker, int userId) {
+    public BookingDtoToOut create(BookingDtoToIn bookingDto, int booker, int userId) {
         Item item = itemRepository.findById(bookingDto.getItemId())
                 .orElseThrow(() -> new NotFoundException("Не найдена вещь"));
         if (booker == item.getOwner())
@@ -42,10 +44,10 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidateException("Некоректные дата и время начала или окончания бронирования");
         if (!itemRepository.existsById(bookingDto.getItemId()) || !(userRepository.existsById(userId)))
             throw new NotFoundException("Не найдена вещь или пользователь");
-        Booking booking = BookingMapper.toBooking(bookingDto);
+        Booking booking = bookingMaper.toBooking(bookingDto);
         booking.setBooker(booker);
         booking.setStatus(Status.WAITING);
-        return BookingMapper.toBookingDto(bookingRepository.save(booking));
+        return bookingDtoToOut(bookingRepository.save(booking));
     }
 
     @Override
@@ -74,7 +76,7 @@ public class BookingServiceImpl implements BookingService {
                 booking.getId(),
                 booking.getStart(),
                 booking.getEnd(),
-                ItemMapper.toItemDto(item),
+                itemMaper.toDto(item),
                 UserMapper.toUserDto(booker),
                 booking.getStatus());
     }
@@ -155,7 +157,7 @@ public class BookingServiceImpl implements BookingService {
                 booking.getId(),
                 booking.getStart(),
                 booking.getEnd(),
-                ItemMapper.toItemDto(item),
+                itemMaper.toDto(item),
                 UserMapper.toUserDto(booker),
                 booking.getStatus());
     }

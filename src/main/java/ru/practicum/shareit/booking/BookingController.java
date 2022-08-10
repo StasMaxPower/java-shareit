@@ -2,7 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingDtoToIn;
 import ru.practicum.shareit.booking.dto.BookingDtoToOut;
 
 import java.util.Collection;
@@ -18,7 +18,7 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public BookingDto createBooking(@RequestBody BookingDto bookingDto,
+    public BookingDtoToOut createBooking(@RequestBody BookingDtoToIn bookingDto,
                                     @RequestHeader("X-Sharer-User-Id") int booker,
                                     @RequestHeader("X-Sharer-User-Id") int userId) {
         return bookingService.create(bookingDto, booker, userId);

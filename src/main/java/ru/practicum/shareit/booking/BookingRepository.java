@@ -37,4 +37,17 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     List<Booking> findBookingByOwnerWaiting(int owner, Status status);
 
     boolean existsBookingByIdAndAndItemIdAndEndBefore(int id, int itemId, LocalDateTime localDateTime);
+
+
+    @Query("select b from Booking b where b.itemId=?1 and b.start>?2 order by b.start desc ")
+    List<Booking>  getNextBookingToItem(int itemId, LocalDateTime localDateTime);
+
+    @Query("select b from Booking b where b.itemId=?1 and b.end<?2 order by b.end desc ")
+    List<Booking>  getLastBookingToItem(int itemId, LocalDateTime localDateTime);
+
+    Booking findFirstByItemIdAndEndBeforeOrderByEndDesc(int itemId, LocalDateTime localDateTime);
+
+    Booking findFirstByItemIdAndStartAfterOrderByStartDesc(int itemId, LocalDateTime localDateTime);
+
+
 }
