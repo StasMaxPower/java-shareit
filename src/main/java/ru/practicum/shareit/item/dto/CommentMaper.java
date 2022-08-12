@@ -7,11 +7,10 @@ import ru.practicum.shareit.user.UserService;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring",uses = { UserService.class})
+@Mapper(componentModel = "spring", uses = {UserService.class})
 public interface CommentMaper {
 
     @Mapping(source = "userId", target = "authorId")
-   // @Mapping(source = "userId", target = "author")
     Comment toComment(CommentDto commentDto, int userId);
 
     @Mapping(source = "userName", target = "authorName")
@@ -20,10 +19,7 @@ public interface CommentMaper {
     @Mapping(source = "author.name", target = "authorName")
     CommentDto toDto(Comment comment);
 
-    List<CommentDto> sourceListToTargetList(List<Comment> sourceList);
-
-
-
+    List<CommentDto> commentListToCommentDtoList(List<Comment> sourceList);
 
 
 }

@@ -19,8 +19,8 @@ public class BookingController {
 
     @PostMapping
     public BookingDtoToOut createBooking(@RequestBody BookingDtoToIn bookingDto,
-                                    @RequestHeader("X-Sharer-User-Id") int booker,
-                                    @RequestHeader("X-Sharer-User-Id") int userId) {
+                                         @RequestHeader("X-Sharer-User-Id") int booker,
+                                         @RequestHeader("X-Sharer-User-Id") int userId) {
         return bookingService.create(bookingDto, booker, userId);
     }
 
@@ -45,7 +45,7 @@ public class BookingController {
 
     @GetMapping("/owner")
     public Collection<BookingDtoToOut> getAllBookingByOwner(@RequestParam(defaultValue = "ALL") State state,
-                                                           @RequestHeader("X-Sharer-User-Id") int ownerId) {
+                                                            @RequestHeader("X-Sharer-User-Id") int ownerId) {
         return bookingService.getAllBookingByOwner(ownerId, state);
     }
 }

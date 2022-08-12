@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.DublicateEmailException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidateException;
-import ru.practicum.shareit.user.InMemory.InMemoryUserStorage;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
+
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     public UserDto addUser(UserDto userDto) {
         log.info("Запрос на добавление пользователей получен");
         User user = UserMapper.toUser(userDto);
-        checkUserEmail(user);
+        // checkUserEmail(user);
         return UserMapper.toUserDto(userStorage.save(user));
     }
 
@@ -39,13 +39,13 @@ public class UserServiceImpl implements UserService {
         log.info("Запрос на удаление пользователей получен");
         userStorage.deleteById(id);
         return null;
-                //UserMapper.toUserDto(userStorage.findById(id).orElseThrow(()->new NotFoundException("Не найден пользователь")));
+        //UserMapper.toUserDto(userStorage.findById(id).orElseThrow(()->new NotFoundException("Не найден пользователь")));
     }
 
     @Override
     public UserDto getById(int id) {
         log.info("Запрос на вывод пользователей по ID получен");
-        return UserMapper.toUserDto(userStorage.findById(id).orElseThrow(()->new NotFoundException("Не найден пользователь")));
+        return UserMapper.toUserDto(userStorage.findById(id).orElseThrow(() -> new NotFoundException("Не найден пользователь")));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         log.info("Запрос на обновление пользователей по ID получен");
         User newUser = UserMapper.toUser(userDto);
         checkDuplicateEmail(newUser);
-        User user = userStorage.findById(id).orElseThrow(()->new NotFoundException("Не найден пользователь"));
+        User user = userStorage.findById(id).orElseThrow(() -> new NotFoundException("Не найден пользователь"));
         if (newUser.getEmail() != null)
             user.setEmail(newUser.getEmail());
         if (newUser.getName() != null)

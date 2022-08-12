@@ -2,7 +2,6 @@ package ru.practicum.shareit.booking;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,8 +23,10 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     @Query("select b from Booking b, Item i where b.itemId=i.id and i.owner=?1 order by b.start desc")
     List<Booking> findAllBookingByOwner(int owner);
+
     @Query("select b from Booking b, Item i where b.itemId=i.id and i.owner=?1 and b.end<?2 order by b.start desc")
     List<Booking> findBookingByOwnerPast(int owner, LocalDateTime localDateTime);
+
     @Query("select b from Booking b, Item i where b.itemId=i.id and i.owner=?1 and b.start>?2 order by b.start desc")
     List<Booking> findBookingByOwnerFuture(int owner, LocalDateTime localDateTime);
 
@@ -33,6 +34,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             "and b.end>?3 order by b.start desc")
     List<Booking> findBookingByOwnerCurrent(int owner, LocalDateTime localDateTimeStart,
                                             LocalDateTime localDateTimeEnd);
+
     @Query("select b from Booking b, Item i where b.itemId=i.id and i.owner=?1 and b.status=?2  order by b.start desc")
     List<Booking> findBookingByOwnerWaiting(int owner, Status status);
 
@@ -40,10 +42,10 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
 
     @Query("select b from Booking b where b.itemId=?1 and b.start>?2 order by b.start desc ")
-    List<Booking>  getNextBookingToItem(int itemId, LocalDateTime localDateTime);
+    List<Booking> getNextBookingToItem(int itemId, LocalDateTime localDateTime);
 
     @Query("select b from Booking b where b.itemId=?1 and b.end<?2 order by b.end desc ")
-    List<Booking>  getLastBookingToItem(int itemId, LocalDateTime localDateTime);
+    List<Booking> getLastBookingToItem(int itemId, LocalDateTime localDateTime);
 
     Booking findFirstByItemIdAndEndBeforeOrderByEndDesc(int itemId, LocalDateTime localDateTime);
 

@@ -34,10 +34,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto add(ItemDto itemDto, int owner) {
+        log.info("Запрос на добавление новой вещи получен");
         Item item = itemMaper.toItem(itemDto);
         item.setOwner(owner);
         userService.checkUserToId(item.getOwner());
-        log.info("Запрос на добавление новой вещи получен");
         return itemMaper.toDto(itemStorage.save(item));
     }
 
@@ -94,6 +94,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public CommentDto addComment(CommentDto commentDto, int owner, int itemId) {
+        log.info("Запрос на добавление комментария получен");
         if (!bookingRepository.existsBookingByIdAndAndItemIdAndEndBefore(owner, itemId, LocalDateTime.now()))
             throw new ValidateException("Такого букинга не существует или данный букинг еще не закончился");
         Comment comment = commentMaper.toComment(commentDto, owner);
@@ -102,16 +103,9 @@ public class ItemServiceImpl implements ItemService {
         comment.setAuthor(userRepository.findById(owner).orElseThrow());
         comment = commentRepository.save(comment);
         return commentMaper.toDto(comment);
-       // return commentMaper.toDto(comment, getUserNameToComment(comment));
-    }
-
-    public String getUserNameToComment(Comment comment) {
-        User user = userRepository.findById(comment.getAuthorId()).orElseThrow(() -> new NotFoundException("пользователя с таким ID нет"));
-        return user.getName();
     }
 
     public Item addNextAndLastBookingToItem(Item item) {
-        // Booking lastBooking = bookingRepository.getLastBookingToItem(item.getId(), LocalDateTime.now());
         Booking nextBooking = null;
         Booking lastBooking = null;
         List<Booking> bookingList = bookingRepository.getLastBookingToItem(item.getId(), LocalDateTime.now());
