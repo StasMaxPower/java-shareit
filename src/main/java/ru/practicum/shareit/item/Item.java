@@ -3,7 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.booking.dto.ShortBooking;
+import ru.practicum.shareit.item.dto.ItemDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -43,7 +43,7 @@ public class Item {
     private List<Comment> comments;
 
     @Transient
-    private ShortBooking lastBooking;
+    private ItemDto.shortBookingDto lastBooking;
     @Transient
-    private ShortBooking nextBooking;
+    private ItemDto.shortBookingDto nextBooking;
 }

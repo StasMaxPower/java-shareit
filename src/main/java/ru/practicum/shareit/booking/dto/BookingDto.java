@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 
 @Data
-public class BookingDtoToOut {
+public class BookingDto {
     private final int id;
     private final LocalDateTime start;
     private final LocalDateTime end;

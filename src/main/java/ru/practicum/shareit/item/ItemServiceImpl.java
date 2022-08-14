@@ -11,7 +11,6 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidateException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.user.UserRepository;
-import ru.practicum.shareit.user.UserService;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -26,7 +25,6 @@ public class ItemServiceImpl implements ItemService {
     private final ItemMaper itemMaper;
     private final CommentMaper commentMaper;
     private final ItemRepository itemStorage;
-    private final UserService userService;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final BookingRepository bookingRepository;
@@ -36,7 +34,8 @@ public class ItemServiceImpl implements ItemService {
         log.info("Запрос на добавление новой вещи получен");
         Item item = itemMaper.toItem(itemDto);
         item.setOwner(owner);
-        userService.checkUserToId(item.getOwner());
+        if (!userRepository.existsById(owner))
+            throw new NotFoundException("Не найден текущий пользователь");
         return itemMaper.toDto(itemStorage.save(item));
     }
 
@@ -110,11 +109,11 @@ public class ItemServiceImpl implements ItemService {
         List<Booking> bookingList = bookingRepository.getLastBookingToItem(item.getId(), LocalDateTime.now());
         if (bookingList != null && (!bookingList.isEmpty()))
             lastBooking = bookingList.get(0) == null ? null : bookingList.get(0);
-        item.setLastBooking(bookingMaper.toShortBooking(lastBooking));
+        item.setLastBooking(bookingMaper.toShortBookingDto(lastBooking));
         bookingList = bookingRepository.getNextBookingToItem(item.getId(), LocalDateTime.now());
         if (bookingList != null && !bookingList.isEmpty())
             nextBooking = bookingList.get(0) == null ? null : bookingList.get(0);
-        item.setNextBooking(bookingMaper.toShortBooking(nextBooking));
+        item.setNextBooking(bookingMaper.toShortBookingDto(nextBooking));
         return item;
     }
 

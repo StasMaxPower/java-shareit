@@ -28,13 +28,11 @@ public class Booking {
     private LocalDateTime end;
     @Column(name = "item_id", nullable = false)
     private int itemId;
-    @Column(name = "booker_id", nullable = false)
-    private int booker;
     @Enumerated(EnumType.STRING)
     private Status status;
     @ManyToOne()
-    @JoinColumn(name = "booker_id", insertable = false, updatable = false)
-    private User bookerUser;
+    @JoinColumn(name = "booker_id")
+    private User booker;
 
     @ManyToOne()
     @JoinColumn(name = "item_id", insertable = false, updatable = false)
