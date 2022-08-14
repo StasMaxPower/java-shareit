@@ -14,7 +14,7 @@ public interface BookingMaper {
     Booking toBooking(ResponseDto bookingDtoToIn);
 
     @Mapping(source = "booker.id", target = "bookerId")
-    ItemDto.shortBookingDto toShortBookingDto(Booking booking);
+    ItemDto.ShortBookingDto toShortBookingDto(Booking booking);
 
 
     BookingDto toBookingDto(Booking booking);

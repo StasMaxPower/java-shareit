@@ -43,7 +43,7 @@ public class Item {
     private List<Comment> comments;
 
     @Transient
-    private ItemDto.shortBookingDto lastBooking;
+    private ItemDto.ShortBookingDto lastBooking;
     @Transient
-    private ItemDto.shortBookingDto nextBooking;
+    private ItemDto.ShortBookingDto nextBooking;
 }

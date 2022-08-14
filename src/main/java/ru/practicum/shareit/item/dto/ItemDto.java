@@ -26,12 +26,12 @@ public class ItemDto {
     private int request;
 
     private List<CommentDto> comments;
-    private shortBookingDto lastBooking;
-    private shortBookingDto nextBooking;
+    private ShortBookingDto lastBooking;
+    private ShortBookingDto nextBooking;
 
 
     @Data
-    public static class shortBookingDto {
+    public static class ShortBookingDto {
         private int id;
         private LocalDateTime start;
         private LocalDateTime end;
