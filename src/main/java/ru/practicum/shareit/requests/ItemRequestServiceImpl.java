@@ -1,10 +1,10 @@
 package ru.practicum.shareit.requests;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidateException;
-import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemMaper;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
@@ -59,16 +59,13 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public Collection<ItemRequestDto> getAllRequests(int from, int size, int userId) {
         List<ItemRequest> result;
-        if (from == -1 && size == -1){
+        if (from == -100 && size == -100) {
             result = itemRequestsRepository.findAll();
-        }
-        else {
+        } else {
             if (from < 0 || size < 1)
-                throw new ValidateException("Невалидные данные");
-            result = itemRequestsRepository.findAllByIdAfterOrderByCreatedDesc(from)
-                    .stream()
-                    .filter(itemRequest -> itemRequest.getRequestor() != userId)
-                    .limit(size)
+                throw new ValidateException("Невалидные параметры запроса");
+            result = itemRequestsRepository.findAll(PageRequest.of(from, size))
+                    .stream().filter(itemRequest -> itemRequest.getRequestor() != userId)
                     .collect(Collectors.toList());
         }
 

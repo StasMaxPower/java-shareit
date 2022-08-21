@@ -11,11 +11,11 @@ public interface ItemService {
 
     ItemDto getItemById(int id, @RequestHeader("X-Sharer-User-Id") int owner);
 
-    Collection<ItemDto> getAllToOwner(int owner);
+    Collection<ItemDto> getAllToOwner(int owner, int from, int size);
 
     ItemDto updateById(ItemDto itemDto, int id, int owner);
 
-    Collection<ItemDto> search(String text);
+    Collection<ItemDto> search(String text, int from, int size);
 
     CommentDto addComment(CommentDto commentDto, int owner, int itemId);
 }

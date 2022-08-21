@@ -6,7 +6,7 @@ import ru.practicum.shareit.booking.dto.BookingMaper;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.requests.ItemRequest;
 
-import java.util.List;
+
 import java.util.Set;
 
 @Mapper(componentModel = "spring", uses = {CommentMaper.class, BookingMaper.class})
@@ -19,5 +19,6 @@ public interface ItemMaper {
     ItemDto toDto(Item item);
 
     ItemRequest.ShortItem toShortItem(Item item);
+
     Set<ItemRequest.ShortItem> toShortItem(Set<Item> item);
 }
