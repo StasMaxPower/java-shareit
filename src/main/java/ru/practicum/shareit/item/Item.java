@@ -36,7 +36,8 @@ public class Item {
     @Column(name = "owner_id", nullable = false)
     private int owner;
     @Column(name = "request_id", nullable = false)
-    private int request;
+    private int requestId;
+
 
     @OneToMany(mappedBy = "itemId", fetch = FetchType.LAZY)
     //@JsonIgnore

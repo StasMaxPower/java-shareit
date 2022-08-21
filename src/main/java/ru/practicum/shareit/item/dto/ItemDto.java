@@ -23,7 +23,7 @@ public class ItemDto {
     private String description;
     @NotNull
     private Boolean available;
-    private int request;
+    private int requestId;
 
     private List<CommentDto> comments;
     private ShortBookingDto lastBooking;
