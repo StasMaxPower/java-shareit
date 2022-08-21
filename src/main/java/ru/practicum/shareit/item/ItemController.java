@@ -28,8 +28,10 @@ public class ItemController {
     }
 
     @GetMapping
-    Collection<ItemDto> getAllItemsToOwner(@RequestHeader("X-Sharer-User-Id") int owner) {
-        return itemService.getAllToOwner(owner);
+    Collection<ItemDto> getAllItemsToOwner(@RequestHeader("X-Sharer-User-Id") int owner,
+                                           @RequestParam(defaultValue = "-100")  int from,
+                                           @RequestParam(defaultValue = "-100")  int size) {
+        return itemService.getAllToOwner(owner, from, size);
     }
 
     @PatchMapping("/{id}")
@@ -39,8 +41,10 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> searchItem(@RequestParam String text) {
-        return itemService.search(text);
+    public Collection<ItemDto> searchItem(@RequestParam String text,
+                                          @RequestParam(defaultValue = "-100")  int from,
+                                          @RequestParam(defaultValue = "-100")  int size) {
+        return itemService.search(text, from, size);
     }
 
     @PostMapping("{itemId}/comment")

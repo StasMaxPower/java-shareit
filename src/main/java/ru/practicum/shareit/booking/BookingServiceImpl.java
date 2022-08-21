@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMaper;
@@ -83,33 +85,43 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingDto> getAllBookingByUser(int userId, State state) {
+    public Collection<BookingDto> getAllBookingByUser(int userId, State state, int from, int size) {
         log.info("Запрос на поиск всех бронирований пользователя с ID {} получен", userId);
         User booker = userRepository.findById(userId).orElseThrow();
-        ;
         if (!userRepository.existsById(userId))
             throw new NotFoundException("Не найден пользователь с ID = " + userId);
         List<Booking> result = new ArrayList<>();
+
+        Pageable p;
+        if (from != -100 && size != -100)
+             p = PageRequest.of(from, size);
+        else
+             p = null;
+
         switch (state) {
             case ALL:
                 booker = userRepository.findById(userId).orElseThrow();
-                result = bookingRepository.findBookingByBookerOrderByStartDesc(booker);
+                result = bookingRepository.findBookingByBookerOrderByStartDesc(booker, p);
                 break;
             case PAST:
-                result = bookingRepository.findBookingByBookerAndEndIsBeforeOrderByStartDesc(booker, LocalDateTime.now());
+                result = bookingRepository
+                        .findBookingByBookerAndEndIsBeforeOrderByStartDesc(booker, LocalDateTime.now(), p);
                 break;
             case FUTURE:
-                result = bookingRepository.findBookingByBookerAndStartAfterOrderByStartDesc(booker, LocalDateTime.now());
+                result = bookingRepository
+                        .findBookingByBookerAndStartAfterOrderByStartDesc(booker, LocalDateTime.now(), p);
                 break;
             case CURRENT:
                 result = bookingRepository.findBookingByBookerAndStartBeforeAndEndIsAfterOrderByStartDesc(booker,
-                        LocalDateTime.now(), LocalDateTime.now());
+                        LocalDateTime.now(), LocalDateTime.now(), p);
                 break;
             case WAITING:
-                result = bookingRepository.findBookingByBookerAndStatusOrderByStartDesc(booker, Status.WAITING);
+                result = bookingRepository.findBookingByBookerAndStatusOrderByStartDesc(booker,
+                        Status.WAITING, p);
                 break;
             case REJECTED:
-                result = bookingRepository.findBookingByBookerAndStatusOrderByStartDesc(booker, Status.REJECTED);
+                result = bookingRepository.findBookingByBookerAndStatusOrderByStartDesc(booker,
+                        Status.REJECTED, p);
                 break;
         }
 
@@ -117,30 +129,37 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingDto> getAllBookingByOwner(int ownerId, State state) {
+    public Collection<BookingDto> getAllBookingByOwner(int ownerId, State state, int from, int size) {
         log.info("Запрос на поиск всех бронирований владельца с ID {} получен", ownerId);
         if (!userRepository.existsById(ownerId))
             throw new NotFoundException("Не найден пользователь с ID = " + ownerId);
         List<Booking> result = new ArrayList<>();
+
+        Pageable p;
+        if (from != -100 && size != -100)
+            p = PageRequest.of(from, size);
+        else
+            p = null;
+
         switch (state) {
             case ALL:
-                result = bookingRepository.findAllBookingByOwner(ownerId);
+                result = bookingRepository.findAllBookingByOwner(ownerId, p);
                 break;
             case PAST:
-                result = bookingRepository.findBookingByOwnerPast(ownerId, LocalDateTime.now());
+                result = bookingRepository.findBookingByOwnerPast(ownerId, LocalDateTime.now(), p);
                 break;
             case FUTURE:
-                result = bookingRepository.findBookingByOwnerFuture(ownerId, LocalDateTime.now());
+                result = bookingRepository.findBookingByOwnerFuture(ownerId, LocalDateTime.now(), p);
                 break;
             case CURRENT:
                 result = bookingRepository.findBookingByOwnerCurrent(ownerId,
-                        LocalDateTime.now(), LocalDateTime.now());
+                        LocalDateTime.now(), LocalDateTime.now(), p);
                 break;
             case WAITING:
-                result = bookingRepository.findBookingByOwnerWaiting(ownerId, Status.WAITING);
+                result = bookingRepository.findBookingByOwnerWaiting(ownerId, Status.WAITING, p);
                 break;
             case REJECTED:
-                result = bookingRepository.findBookingByOwnerWaiting(ownerId, Status.REJECTED);
+                result = bookingRepository.findBookingByOwnerWaiting(ownerId, Status.REJECTED, p);
                 break;
         }
 

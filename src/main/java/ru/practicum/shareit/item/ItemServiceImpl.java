@@ -2,6 +2,8 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 import ru.practicum.shareit.booking.Booking;
@@ -52,17 +54,26 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> getAllToOwner(int owner) {
+    public Collection<ItemDto> getAllToOwner(int owner, int from, int size) {
         log.info("Запрос на вывод всех вещей получен");
-        return
-                itemStorage.findAll().stream()
-                        .filter(item -> item.getOwner() == owner)
-                        .map(item -> item = addNextAndLastBookingToItem(item))
-                        .map(itemMaper::toDto)
-                        .sorted(Comparator.comparingInt(ItemDto::getId))
-                        .collect(Collectors.toList());
-/*                itemStorage.getAllToOwner(owner).stream()
-                .map(ItemMapper::toItemDto).collect(Collectors.toList());*/
+        if (from == -100 && size == -100) {
+            return
+                    itemStorage.findAll().stream()
+                            .filter(item -> item.getOwner() == owner)
+                            .map(item -> item = addNextAndLastBookingToItem(item))
+                            .map(itemMaper::toDto)
+                            .sorted(Comparator.comparingInt(ItemDto::getId))
+                            .collect(Collectors.toList());
+        } else {
+            return
+                    itemStorage.findAll(PageRequest.of(from, size)).stream()
+                            .filter(item -> item.getOwner() == owner)
+                            .map(item -> item = addNextAndLastBookingToItem(item))
+                            .map(itemMaper::toDto)
+                            .sorted(Comparator.comparingInt(ItemDto::getId))
+                            .collect(Collectors.toList());
+        }
+
     }
 
     @Override
@@ -81,13 +92,19 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> search(String text) {
+    public Collection<ItemDto> search(String text, int from, int size) {
         log.info("Запрос на поиск вещи с текстом {} получен", text);
         if (text.equals(""))
             return new ArrayList<>();
-        return itemStorage.search(text).stream()
-                .map(itemMaper::toDto)
-                .collect(Collectors.toList());
+        if (from == -100 && size == -100) {
+            return itemStorage.search(text).stream()
+                    .map(itemMaper::toDto)
+                    .collect(Collectors.toList());
+        } else {
+            return itemStorage.search(text, PageRequest.of(size, from)).stream()
+                    .map(itemMaper::toDto)
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override
