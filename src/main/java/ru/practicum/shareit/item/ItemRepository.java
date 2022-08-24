@@ -22,4 +22,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     Set<Item> findAllByRequestId(int requestId);
 
     Page<Item> findAll(Pageable pageable);
+
+    @Query(nativeQuery = true, value = "ALTER TABLE items AUTO_INCREMENT=0")
+    void setAutoincrement();
 }
