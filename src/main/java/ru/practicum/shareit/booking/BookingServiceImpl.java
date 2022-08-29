@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,7 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +41,7 @@ public class BookingServiceImpl implements BookingService {
         if (bookingDto.getStart().isBefore(LocalDateTime.now()) ||
                 bookingDto.getStart().isBefore(LocalDateTime.now()) || bookingDto.getStart() == bookingDto.getEnd())
             throw new ValidateException("Некоректные дата и время начала или окончания бронирования");
-        if (!itemRepository.existsById(bookingDto.getItemId()) || !(userRepository.existsById(booker)))
+        if (!userRepository.existsById(booker))
             throw new NotFoundException("Не найдена вещь или пользователь");
         Booking booking = bookingMaper.toBooking(bookingDto);
         //booking.setBooker(booker);
@@ -56,7 +55,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto verificateStatus(int bookingId, boolean approved, int userId) {
         log.info("Запрос на подтверждение статуса букинга получен");
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new NotFoundException("Не найден booking c ID = " + bookingId));
+                .orElseThrow(() -> new NotFoundException("Не найден booking c ID"));
         if (booking.getStatus() == Status.APPROVED)
             throw new ValidateException("Подтвержденный статус изменить нельзя");
         User booker = userRepository.findById(booking.getBooker().getId())
@@ -80,7 +79,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto getBookingById(int bookingId, int userId) {
         log.info("Запрос на поиск букинга с ID {} получен", bookingId);
         Booking booking = bookingRepository.getBookingById(bookingId, userId)
-                .orElseThrow(() -> new NotFoundException("Не найден booking c ID = " + bookingId));
+                .orElseThrow(() -> new NotFoundException("Не найден booking c ID"));
         return bookingMaper.toBookingDto(booking);
     }
 
@@ -88,15 +87,16 @@ public class BookingServiceImpl implements BookingService {
     public Collection<BookingDto> getAllBookingByUser(int userId, State state, int from, int size) {
         log.info("Запрос на поиск всех бронирований пользователя с ID {} получен", userId);
         User booker = userRepository.findById(userId).orElseThrow();
-        if (!userRepository.existsById(userId))
-            throw new NotFoundException("Не найден пользователь с ID = " + userId);
-        List<Booking> result = new ArrayList<>();
+/*        if (!userRepository.existsById(userId))
+            throw new NotFoundException("Не найден пользователь с ID = " + userId);*/
+        Page<Booking> result = null;
 
+        from = from - 1 < 0 ? -1 : from - 1;
         Pageable p;
         if (from != -100 && size != -100)
              p = PageRequest.of(from, size);
         else
-             p = null;
+             p = Pageable.unpaged();
 
         switch (state) {
             case ALL:
@@ -133,13 +133,13 @@ public class BookingServiceImpl implements BookingService {
         log.info("Запрос на поиск всех бронирований владельца с ID {} получен", ownerId);
         if (!userRepository.existsById(ownerId))
             throw new NotFoundException("Не найден пользователь с ID = " + ownerId);
-        List<Booking> result = new ArrayList<>();
+        Page<Booking> result = null;
 
         Pageable p;
         if (from != -100 && size != -100)
             p = PageRequest.of(from, size);
         else
-            p = null;
+            p = Pageable.unpaged();
 
         switch (state) {
             case ALL:

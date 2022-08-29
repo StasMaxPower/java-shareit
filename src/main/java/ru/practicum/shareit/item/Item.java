@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -14,6 +15,7 @@ import java.util.List;
  * // TODO .
  */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.requests.dto;
 
+import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.requests.ItemRequest;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 /**
  * // TODO .
  */
+@Builder
 @Data
 public class ItemRequestDto {
     private int id;

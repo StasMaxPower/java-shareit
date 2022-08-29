@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 import ru.practicum.shareit.booking.Booking;
@@ -44,7 +45,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto getItemById(int id, @RequestHeader("X-Sharer-User-Id") int owner) {
         log.info("Запрос на вывод вещи по ID получен");
         Item item = itemStorage.findById(id).orElseThrow(() ->
-                new NotFoundException("Не найдена вещь с ID " + id));
+                new NotFoundException("Не найдена вещь с ID"));
         if (item.getOwner() == owner) {
             item = addNextAndLastBookingToItem(item);
             return itemMaper.toDto(item);
@@ -55,23 +56,19 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Collection<ItemDto> getAllToOwner(int owner, int from, int size) {
         log.info("Запрос на вывод всех вещей получен");
-        if (from == -100 && size == -100) {
-            return
-                    itemStorage.findAll().stream()
+        Pageable p;
+        if (from != -100 && size != -100)
+            p = PageRequest.of(from, size);
+        else
+            p = Pageable.unpaged();
+        return
+                itemStorage.findAll(p).stream()
                             .filter(item -> item.getOwner() == owner)
                             .map(item -> item = addNextAndLastBookingToItem(item))
                             .map(itemMaper::toDto)
                             .sorted(Comparator.comparingInt(ItemDto::getId))
                             .collect(Collectors.toList());
-        } else {
-            return
-                    itemStorage.findAll(PageRequest.of(from, size)).stream()
-                            .filter(item -> item.getOwner() == owner)
-                            .map(item -> item = addNextAndLastBookingToItem(item))
-                            .map(itemMaper::toDto)
-                            .sorted(Comparator.comparingInt(ItemDto::getId))
-                            .collect(Collectors.toList());
-        }
+
 
     }
 
@@ -95,15 +92,15 @@ public class ItemServiceImpl implements ItemService {
         log.info("Запрос на поиск вещи с текстом {} получен", text);
         if (text.equals(""))
             return new ArrayList<>();
-        if (from == -100 && size == -100) {
-            return itemStorage.search(text).stream()
+
+        Pageable p;
+        if (from != -100 && size != -100)
+            p = PageRequest.of(from, size);
+        else p = Pageable.unpaged();
+
+        return itemStorage.search(text, p).stream()
                     .map(itemMaper::toDto)
                     .collect(Collectors.toList());
-        } else {
-            return itemStorage.search(text, PageRequest.of(size, from)).stream()
-                    .map(itemMaper::toDto)
-                    .collect(Collectors.toList());
-        }
     }
 
     @Override

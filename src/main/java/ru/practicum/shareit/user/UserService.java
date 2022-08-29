@@ -15,5 +15,5 @@ public interface UserService {
 
     UserDto updateById(int id, UserDto userDto);
 
-    void checkUserToId(int id);
+   // void checkUserToId(int id);
 }

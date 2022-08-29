@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.DublicateEmailException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidateException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 
@@ -61,15 +60,6 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toUserDto(userStorage.save(user));
     }
 
-
-    void checkUserEmail(User user) {
-        checkDuplicateEmail(user);
-        if (user.getEmail() == null || user.getEmail().isBlank() || (!user.getEmail().contains("@"))) {
-            log.info("Неверно указана электронная почта");
-            throw new ValidateException("Неверно указана электронная почта");
-        }
-    }
-
     void checkDuplicateEmail(User user) {
         if (userStorage.findAll().stream().anyMatch(u -> u.getEmail().equals(user.getEmail()))) {
             log.info("Пользователь с таким Email уже существует");
@@ -77,9 +67,9 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
+/*    @Override
     public void checkUserToId(int id) {
         if (getAll().stream().noneMatch(user -> user.getId() == id))
             throw new NotFoundException("Пользователь с таким ID не найден");
-    }
+    }*/
 }
