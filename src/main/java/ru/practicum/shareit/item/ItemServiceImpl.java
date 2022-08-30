@@ -54,13 +54,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> getAllToOwner(int owner, int from, int size) {
+    public List<ItemDto> getAllToOwner(int owner, int from, int size) {
         log.info("Запрос на вывод всех вещей получен");
-        Pageable p;
-        if (from != -100 && size != -100)
-            p = PageRequest.of(from, size);
-        else
-            p = Pageable.unpaged();
+
+        Pageable p = PageRequest.of(from, size);
+
         return
                 itemStorage.findAll(p).stream()
                             .filter(item -> item.getOwner() == owner)
@@ -88,15 +86,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> search(String text, int from, int size) {
+    public List<ItemDto> search(String text, int from, int size) {
         log.info("Запрос на поиск вещи с текстом {} получен", text);
         if (text.equals(""))
             return new ArrayList<>();
 
-        Pageable p;
-        if (from != -100 && size != -100)
-            p = PageRequest.of(from, size);
-        else p = Pageable.unpaged();
+        Pageable p = PageRequest.of(from, size);
 
         return itemStorage.search(text, p).stream()
                     .map(itemMaper::toDto)

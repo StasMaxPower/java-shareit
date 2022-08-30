@@ -6,11 +6,8 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import javax.validation.Valid;
-import java.util.Collection;
+import java.util.List;
 
-/**
- * // TODO .
- */
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -28,9 +25,9 @@ public class ItemController {
     }
 
     @GetMapping
-    Collection<ItemDto> getAllItemsToOwner(@RequestHeader("X-Sharer-User-Id") int owner,
-                                           @RequestParam(defaultValue = "-100")  int from,
-                                           @RequestParam(defaultValue = "-100")  int size) {
+    List<ItemDto> getAllItemsToOwner(@RequestHeader("X-Sharer-User-Id") int owner,
+                                     @RequestParam(defaultValue = "0")  int from,
+                                     @RequestParam(defaultValue = "10")  int size) {
         return itemService.getAllToOwner(owner, from, size);
     }
 
@@ -41,9 +38,9 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> searchItem(@RequestParam String text,
-                                          @RequestParam(defaultValue = "-100")  int from,
-                                          @RequestParam(defaultValue = "-100")  int size) {
+    public List<ItemDto> searchItem(@RequestParam String text,
+                                          @RequestParam(defaultValue = "0")  int from,
+                                          @RequestParam(defaultValue = "10")  int size) {
         return itemService.search(text, from, size);
     }
 

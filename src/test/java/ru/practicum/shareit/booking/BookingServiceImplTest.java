@@ -319,7 +319,7 @@ class BookingServiceImplTest {
     @Test
     void getAllBookingByOwnerFailWithoutPag() {
         when(userRepository.existsById(anyInt())).thenReturn(true);
-        Exception ex = assertThrows(NullPointerException.class,
+        Exception ex = assertThrows(IllegalArgumentException.class,
                 () -> bookingService.getAllBookingByOwner(1, null, -100, -100));
     }
 

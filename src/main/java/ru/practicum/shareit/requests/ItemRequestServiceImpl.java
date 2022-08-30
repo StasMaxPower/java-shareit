@@ -12,7 +12,6 @@ import ru.practicum.shareit.requests.dto.ItemRequestMapper;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,7 +37,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public Collection<ItemRequestDto> getOwnRequests(int userId) {
+    public List<ItemRequestDto> getOwnRequests(int userId) {
         if (userRepository.findById(userId).isEmpty())
             throw new NotFoundException("Пользователь не найден");
         List<ItemRequest> result = itemRequestsRepository.findAllByRequestorOrderByCreatedDesc(userId);
@@ -57,15 +56,10 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public Collection<ItemRequestDto> getAllRequests(int from, int size, int userId) {
+    public List<ItemRequestDto> getAllRequests(int from, int size, int userId) {
         List<ItemRequest> result;
 
-        Pageable p;
-        if (from != -100 && size != -100)
-            p = PageRequest.of(from, size);
-        else {
-            p = Pageable.unpaged();
-        }
+        Pageable p = PageRequest.of(from, size);
 
         result = itemRequestsRepository.findAll(p)
                 .stream().filter(itemRequest -> itemRequest.getRequestor() != userId)

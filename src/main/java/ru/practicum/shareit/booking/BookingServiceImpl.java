@@ -16,8 +16,9 @@ import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -84,19 +85,12 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingDto> getAllBookingByUser(int userId, State state, int from, int size) {
+    public List<BookingDto> getAllBookingByUser(int userId, State state, @Positive int from, int size) {
         log.info("Запрос на поиск всех бронирований пользователя с ID {} получен", userId);
         User booker = userRepository.findById(userId).orElseThrow();
-/*        if (!userRepository.existsById(userId))
-            throw new NotFoundException("Не найден пользователь с ID = " + userId);*/
         Page<Booking> result = null;
-
-        from = from - 1 < 0 ? -1 : from - 1;
-        Pageable p;
-        if (from != -100 && size != -100)
-             p = PageRequest.of(from, size);
-        else
-             p = Pageable.unpaged();
+        from = from - 1 < 0 ? 0 : from - 1;
+        Pageable p = PageRequest.of(from, size);
 
         switch (state) {
             case ALL:
@@ -129,17 +123,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingDto> getAllBookingByOwner(int ownerId, State state, int from, int size) {
+    public List<BookingDto> getAllBookingByOwner(int ownerId, State state, int from, int size) {
         log.info("Запрос на поиск всех бронирований владельца с ID {} получен", ownerId);
         if (!userRepository.existsById(ownerId))
             throw new NotFoundException("Не найден пользователь с ID = " + ownerId);
         Page<Booking> result = null;
 
-        Pageable p;
-        if (from != -100 && size != -100)
-            p = PageRequest.of(from, size);
-        else
-            p = Pageable.unpaged();
+        Pageable p = PageRequest.of(from, size);
 
         switch (state) {
             case ALL:

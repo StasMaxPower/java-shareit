@@ -10,9 +10,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-/**
- * // TODO .
- */
 @Builder
 @AllArgsConstructor
 @Data

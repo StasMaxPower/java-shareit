@@ -5,11 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.validation.Valid;
-import java.util.Collection;
+import java.util.List;
 
-/**
- * // TODO .
- */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/users")
@@ -22,7 +19,7 @@ public class UserController {
     }
 
     @GetMapping
-    public Collection<UserDto> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userService.getAll();
     }
 

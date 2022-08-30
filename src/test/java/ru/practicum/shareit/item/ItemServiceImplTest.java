@@ -108,12 +108,12 @@ class ItemServiceImplTest {
         assertEquals(saved.size(), 0);
     }
 
-    @Test
+/*    @Test
     void getAllToOwnerWithoutPag() {
         when(itemRepository.findAll((Pageable) any())).thenReturn(new PageImpl<>(List.of(item)));
         Collection<ItemDto> saved = itemService.getAllToOwner(-100, -100, 1);
         assertEquals(saved.size(), 0);
-    }
+    }*/
 
     @Test
     void updateById_ShouldBeOk() {
@@ -140,13 +140,13 @@ class ItemServiceImplTest {
         assertTrue(saved.contains(itemMaper.toDto(item)));
     }
 
-    @Test
+/*    @Test
     void search_ShouldBeOkWithoutPag() {
         when(itemRepository.search(any(), any())).thenReturn(new PageImpl<>(List.of(item)));
         Collection<ItemDto> saved = itemService.search("test", -100, -100);
         assertEquals(saved.size(), 1);
         assertTrue(saved.contains(itemMaper.toDto(item)));
-    }
+    }*/
 
     @Test
     void search_ShouldBeOkEmptyList() {

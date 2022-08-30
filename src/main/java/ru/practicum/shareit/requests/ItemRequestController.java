@@ -5,11 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
 
 import javax.validation.Valid;
-import java.util.Collection;
+import java.util.List;
 
-/**
- * // TODO .
- */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/requests")
@@ -24,7 +21,7 @@ public class ItemRequestController {
     }
 
     @GetMapping
-    public Collection<ItemRequestDto> getOwnRequests(@RequestHeader("X-Sharer-User-Id") int userId) {
+    public List<ItemRequestDto> getOwnRequests(@RequestHeader("X-Sharer-User-Id") int userId) {
         return itemRequestService.getOwnRequests(userId);
     }
 
@@ -35,8 +32,8 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public Collection<ItemRequestDto> getAllRequests(@RequestParam(defaultValue = "-100") int from,
-                                                     @RequestParam(defaultValue = "-100") int size,
+    public List<ItemRequestDto> getAllRequests(@RequestParam(defaultValue = "0") int from,
+                                                     @RequestParam(defaultValue = "10") int size,
                                                      @RequestHeader("X-Sharer-User-Id") int userId) {
 
         return itemRequestService.getAllRequests(from, size, userId);

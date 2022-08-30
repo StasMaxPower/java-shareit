@@ -8,7 +8,7 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -21,12 +21,11 @@ public class UserServiceImpl implements UserService {
     public UserDto addUser(UserDto userDto) {
         log.info("Запрос на добавление пользователей получен");
         User user = UserMapper.toUser(userDto);
-        // checkUserEmail(user);
         return UserMapper.toUserDto(userStorage.save(user));
     }
 
     @Override
-    public Collection<UserDto> getAll() {
+    public List<UserDto> getAll() {
         log.info("Запрос на вывод пользователей получен");
         return userStorage.findAll().stream()
                 .map(UserMapper::toUserDto)
@@ -38,7 +37,6 @@ public class UserServiceImpl implements UserService {
         log.info("Запрос на удаление пользователей получен");
         userStorage.deleteById(id);
         return null;
-        //UserMapper.toUserDto(userStorage.findById(id).orElseThrow(()->new NotFoundException("Не найден пользователь")));
     }
 
     @Override
@@ -67,9 +65,4 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-/*    @Override
-    public void checkUserToId(int id) {
-        if (getAll().stream().noneMatch(user -> user.getId() == id))
-            throw new NotFoundException("Пользователь с таким ID не найден");
-    }*/
 }
