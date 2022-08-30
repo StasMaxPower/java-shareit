@@ -310,6 +310,24 @@ class BookingServiceImplTest {
     }
 
     @Test
+    void getAllBookingByUserMustBeFail() {
+        when(userRepository.findById(anyInt())).thenReturn(Optional.ofNullable(user1));
+        when(bookingRepository.findBookingByBookerOrderByStartDesc(any(), any()))
+                .thenReturn(new PageImpl<>(List.of(booking)));
+        Exception ex = assertThrows(NullPointerException.class, () -> bookingService
+                .getAllBookingByUser(1, null, 1, 10));
+    }
+
+    @Test
+    void getAllBookingByOwnerMustBeFail() {
+        when(userRepository.existsById(anyInt())).thenReturn(true);
+        when(bookingRepository.findAllBookingByOwner(anyInt(), any()))
+                .thenReturn(new PageImpl<>(List.of(booking)));
+        Exception ex = assertThrows(NullPointerException.class, () -> bookingService
+                .getAllBookingByOwner(1, null, 1, 10));
+    }
+
+    @Test
     void getAllBookingByOwnerFail() {
         when(userRepository.existsById(anyInt())).thenReturn(false);
         NotFoundException ex = assertThrows(NotFoundException.class,

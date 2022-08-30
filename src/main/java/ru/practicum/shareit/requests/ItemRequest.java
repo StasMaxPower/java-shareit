@@ -30,6 +30,7 @@ public class ItemRequest {
     private Set<ShortItem> items;
 
     @Data
+    @AllArgsConstructor
     public static class ShortItem {
         private int id;
         private String name;

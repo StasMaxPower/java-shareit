@@ -8,16 +8,11 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {ItemMaper.class})
 public interface ItemRequestMapper {
-
-
-
     ItemRequest toItemRequest(ItemRequestDto itemRequestDto);
 
     ItemRequestDto toItemRequestDto(ItemRequest itemRequest);
 
     List<ItemRequestDto> toItemRequestDto(List<ItemRequest> itemRequest);
-
-
 
 
 }

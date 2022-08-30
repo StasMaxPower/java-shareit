@@ -39,6 +39,7 @@ class UserServiceImplTest {
     UserDto userDto = UserDto.builder().name("user").email("test@email.ru").build();
     User user = User.builder().name("user").email("test@email.ru").build();
     User newUser = User.builder().name("newUser").email("testNewUser@email.ru").build();
+    UserDto nullUserDto = UserDto.builder().name(null).email(null).build();
 
     @Test
     void addUser_ShouldBeOk() {
@@ -75,6 +76,15 @@ class UserServiceImplTest {
     }
 
     @Test
+    void getById_ShouldBeFail() {
+        when(userRepository.findById(anyInt()))
+                .thenReturn(Optional.empty());
+        Exception ex = Assertions.assertThrows(NotFoundException.class,
+                () -> userService.getById(1));
+        assertEquals(ex.getMessage(), "Не найден пользователь");
+    }
+
+    @Test
     void updateById_ShouldBeOk() {
         when(userRepository.save(any()))
                 .thenReturn(user);
@@ -96,6 +106,16 @@ class UserServiceImplTest {
     }
 
     @Test
+    void updateById_ShouldBeFailWithNullName() {
+        when(userRepository.save(any()))
+                .thenReturn(user);
+        when(userRepository.findById(anyInt()))
+                .thenReturn(Optional.ofNullable(newUser));
+        UserDto savedUser = userService.updateById(1, nullUserDto);
+        Assertions.assertNotNull(savedUser);
+    }
+
+    @Test
     void updateById_ShouldBeDuplicateEmailException() {
         when(userRepository.findAll())
                 .thenReturn(List.of(user));
@@ -104,7 +124,4 @@ class UserServiceImplTest {
         assertEquals(ex.getMessage(), "Пользователь с таким Email уже существует");
     }
 
-    @Test
-    void checkUserToId() {
-    }
 }

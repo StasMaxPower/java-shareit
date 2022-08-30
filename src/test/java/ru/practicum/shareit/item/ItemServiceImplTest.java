@@ -49,6 +49,9 @@ class ItemServiceImplTest {
     Item item = Item.builder().owner(3).name("test").description("testDesc").build();
     ItemDto itemDto = ItemDto.builder().name("testDto").description("testDescDto")
             .available(true).build();
+
+    ItemDto nullItemDto = ItemDto.builder().name(null).description(null)
+            .available(true).build();
     Comment comment = Comment.builder().text("test").build();
 
     @BeforeEach
@@ -108,18 +111,21 @@ class ItemServiceImplTest {
         assertEquals(saved.size(), 0);
     }
 
-/*    @Test
-    void getAllToOwnerWithoutPag() {
-        when(itemRepository.findAll((Pageable) any())).thenReturn(new PageImpl<>(List.of(item)));
-        Collection<ItemDto> saved = itemService.getAllToOwner(-100, -100, 1);
-        assertEquals(saved.size(), 0);
-    }*/
 
     @Test
     void updateById_ShouldBeOk() {
         when(itemRepository.save(any())).thenReturn(item);
         when(itemRepository.findById(anyInt())).thenReturn(Optional.ofNullable(item));
         ItemDto savedDto = itemService.updateById(itemDto, 0, 3);
+        assertEquals(item.getName(), savedDto.getName());
+        Mockito.verify(itemRepository, Mockito.times(1)).save(any());
+    }
+
+    @Test
+    void updateById_ShouldBeOkWithNullItem() {
+        when(itemRepository.save(any())).thenReturn(item);
+        when(itemRepository.findById(anyInt())).thenReturn(Optional.ofNullable(item));
+        ItemDto savedDto = itemService.updateById(nullItemDto, 0, 3);
         assertEquals(item.getName(), savedDto.getName());
         Mockito.verify(itemRepository, Mockito.times(1)).save(any());
     }
@@ -133,20 +139,20 @@ class ItemServiceImplTest {
     }
 
     @Test
+    void updateById_ShouldFailed() {
+        when(itemRepository.findById(anyInt())).thenReturn(Optional.empty());
+        NotFoundException ex = assertThrows(NotFoundException.class,
+                () -> itemService.updateById(itemDto, 1, 1));
+        assertEquals(ex.getMessage(), "Не найдена вещь с ID");
+    }
+
+    @Test
     void search_ShouldBeOk() {
         when(itemRepository.search(any(), any())).thenReturn(new PageImpl<>(List.of(item)));
         Collection<ItemDto> saved = itemService.search("test", 0, 1);
         assertEquals(saved.size(), 1);
         assertTrue(saved.contains(itemMaper.toDto(item)));
     }
-
-/*    @Test
-    void search_ShouldBeOkWithoutPag() {
-        when(itemRepository.search(any(), any())).thenReturn(new PageImpl<>(List.of(item)));
-        Collection<ItemDto> saved = itemService.search("test", -100, -100);
-        assertEquals(saved.size(), 1);
-        assertTrue(saved.contains(itemMaper.toDto(item)));
-    }*/
 
     @Test
     void search_ShouldBeOkEmptyList() {

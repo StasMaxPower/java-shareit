@@ -97,16 +97,6 @@ class ItemRequestServiceImplTest {
         assertTrue(list.contains(itemRequestMapper.toItemRequestDto(newItemRequest)));
     }
 
-/*    @Test
-    void getAllRequests_ShouldBeOkWithoutPag() {
-        when(itemRequestsRepository.findAll((Pageable) any()))
-                .thenReturn((new PageImpl<>(List.of(itemRequest, newItemRequest))));
-        Collection<ItemRequestDto> list = itemRequestService.getAllRequests(-100, -100, 1);
-        assertEquals(list.size(), 2);
-        assertTrue(list.contains(itemRequestMapper.toItemRequestDto(itemRequest)));
-        assertTrue(list.contains(itemRequestMapper.toItemRequestDto(newItemRequest)));
-    }*/
-
     @Test
     void getRequestById_ShouldBeOk() {
         when(itemRequestsRepository.findById(anyInt())).thenReturn(Optional.ofNullable(itemRequest));
@@ -119,5 +109,13 @@ class ItemRequestServiceImplTest {
     void getRequestById_ShouldBeFailed() {
         Exception ex = assertThrows(NotFoundException.class, () -> itemRequestService.getRequestById(anyInt(), 1));
         assertEquals(ex.getMessage(), "Пользователь не найден");
+    }
+
+    @Test
+    void getRequestById_ShouldBeFail() {
+        when(itemRequestsRepository.findById(anyInt())).thenReturn(Optional.empty());
+        when(userRepository.findById(anyInt())).thenReturn(Optional.ofNullable(user));
+        Exception ex = assertThrows(NotFoundException.class, () -> itemRequestService.getRequestById(anyInt(), 1));
+        assertEquals(ex.getMessage(), "Не найден запрос с ID");
     }
 }

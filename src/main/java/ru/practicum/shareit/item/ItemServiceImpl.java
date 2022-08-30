@@ -73,7 +73,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto updateById(ItemDto newItem, int id, int owner) {
         log.info("Запрос на обновление вещи с ID = {} получен", id);
-        Item item = itemStorage.findById(id).orElseThrow(() -> new NotFoundException("Не найдена вещь с ID " + id));
+        Item item = itemStorage.findById(id).orElseThrow(() -> new NotFoundException("Не найдена вещь с ID"));
         if (item.getOwner() != owner)
             throw new NotFoundException("Invalid user");
         if (newItem.getName() != null)

@@ -12,7 +12,6 @@ import java.util.Optional;
 
 
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
-
     @Query("select b from Booking b, Item i where b.itemId=i.id and b.id=?1 and (b.booker.id=?2 or i.owner=?2 ) ")
     Optional<Booking> getBookingById(int bookingId, int userId);
 
@@ -48,16 +47,9 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     boolean existsBookingByIdAndAndItemIdAndEndBefore(int id, int itemId, LocalDateTime localDateTime);
 
-
     @Query("select b from Booking b where b.itemId=?1 and b.start>?2 order by b.start desc ")
     List<Booking> getNextBookingToItem(int itemId, LocalDateTime localDateTime);
 
     @Query("select b from Booking b where b.itemId=?1 and b.end<?2 order by b.end desc ")
     List<Booking> getLastBookingToItem(int itemId, LocalDateTime localDateTime);
-
-    Booking findFirstByItemIdAndEndBeforeOrderByEndDesc(int itemId, LocalDateTime localDateTime);
-
-    Booking findFirstByItemIdAndStartAfterOrderByStartDesc(int itemId, LocalDateTime localDateTime);
-
-
 }

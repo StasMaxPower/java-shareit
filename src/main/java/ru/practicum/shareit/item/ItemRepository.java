@@ -5,14 +5,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
 import java.util.Set;
 
 public interface ItemRepository extends JpaRepository<Item, Integer> {
-    @Query(" select i from Item i " +
-            "where (i.available=true) and (upper(i.name) like upper(concat('%', ?1, '%')) " +
-            " or upper(i.description) like upper(concat('%', ?1, '%')))")
-    List<Item> search(String text);
 
     @Query(" select i from Item i " +
             "where (i.available=true) and (upper(i.name) like upper(concat('%', ?1, '%')) " +
@@ -23,6 +18,4 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     Page<Item> findAll(Pageable pageable);
 
-    @Query(nativeQuery = true, value = "ALTER TABLE items AUTO_INCREMENT=0")
-    void setAutoincrement();
 }
