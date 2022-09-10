@@ -26,10 +26,9 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> methodArgumentNotValidException( IllegalArgumentException e) {
+    public Map<String, String> methodArgumentNotValidException(IllegalArgumentException e) {
         return Map.of("Ошибка", e.getMessage());
     }
-
 
 
     @ExceptionHandler
