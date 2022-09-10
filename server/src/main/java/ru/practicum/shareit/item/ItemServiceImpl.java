@@ -106,7 +106,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public CommentDto addComment(CommentDto commentDto, int owner, int itemId) {
         log.info("Запрос на добавление комментария получен");
-        if (!bookingRepository.existsBookingByIdAndAndItemIdAndEndBefore(owner, itemId, LocalDateTime.now()))
+        Item item = itemStorage.findById(itemId).orElseThrow();
+        if (!bookingRepository.existsBookingByItemAndEndBefore(item, LocalDateTime.now()))
             throw new ValidateException("Такого букинга не существует или данный букинг еще не закончился");
         Comment comment = commentMaper.toComment(commentDto, owner);
         comment.setItemId(itemId);

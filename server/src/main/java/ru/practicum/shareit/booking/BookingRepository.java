@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
@@ -45,7 +46,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     @Query("select b from Booking b, Item i where b.itemId=i.id and i.owner=?1 and b.status=?2  order by b.start desc")
     Page<Booking> findBookingByOwnerWaiting(int owner, Status status, Pageable pageable);
 
-    boolean existsBookingByIdAndAndItemIdAndEndBefore(int id, int itemId, LocalDateTime localDateTime);
+    boolean existsBookingByItemAndEndBefore(Item item, LocalDateTime localDateTime);
 
     @Query("select b from Booking b where b.itemId=?1 and b.start>?2 order by b.start desc ")
     List<Booking> getNextBookingToItem(int itemId, LocalDateTime localDateTime);

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -33,14 +32,14 @@ public class ItemRequestController {
 
     @GetMapping("/{requestId}")
     public ResponseEntity<Object> getRequestById(@RequestHeader("X-Sharer-User-Id") int userId,
-                                         @PathVariable int requestId) {
+                                                 @PathVariable int requestId) {
         return itemRequestClient.getRequestById(userId, requestId);
     }
 
     @GetMapping("/all")
     public ResponseEntity<Object> getAllRequests(@RequestParam(defaultValue = "0") int from,
-                                                     @RequestParam(defaultValue = "10") int size,
-                                                     @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                 @RequestParam(defaultValue = "10") int size,
+                                                 @RequestHeader("X-Sharer-User-Id") Long userId) {
 
         return itemRequestClient.getAllRequests(from, size, userId);
     }

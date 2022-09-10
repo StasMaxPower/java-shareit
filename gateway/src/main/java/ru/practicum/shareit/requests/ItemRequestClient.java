@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -35,7 +34,6 @@ public class ItemRequestClient extends BaseClient {
         );
         return get("/all?from={from}&size={size}", userId, parameters);
     }
-
 
 
     public ResponseEntity<Object> addRequests(ItemRequestDto itemRequestDto, Long userId) {
