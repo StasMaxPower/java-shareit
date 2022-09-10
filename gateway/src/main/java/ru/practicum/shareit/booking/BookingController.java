@@ -62,6 +62,7 @@ public class BookingController {
     public ResponseEntity<Object> verificateStatus(@PathVariable long bookingId,
                                                    @RequestParam boolean approved,
                                                    @RequestHeader("X-Sharer-User-Id") long userId) {
+        log.info("Update booking {}, userId={}", bookingId, userId);
         return bookingClient.verificateStatus(userId, approved, bookingId);
     }
 }

@@ -12,7 +12,6 @@ import java.util.Set;
 @Data
 public class ItemRequestDto {
     private int id;
-    @NotNull()
     private String description;
     private LocalDateTime created;
     private Set<ItemRequest.ShortItem> items;

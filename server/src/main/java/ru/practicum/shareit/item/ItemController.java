@@ -15,7 +15,8 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
-    public ItemDto addItem(@RequestBody @Valid ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") int owner) {
+    public ItemDto addItem(@RequestBody ItemDto itemDto,
+                           @RequestHeader("X-Sharer-User-Id") int owner) {
         return itemService.add(itemDto, owner);
     }
 
@@ -26,8 +27,8 @@ public class ItemController {
 
     @GetMapping
     List<ItemDto> getAllItemsToOwner(@RequestHeader("X-Sharer-User-Id") int owner,
-                                     @RequestParam(defaultValue = "0")  int from,
-                                     @RequestParam(defaultValue = "10")  int size) {
+                                     @RequestParam(defaultValue = "0") int from,
+                                     @RequestParam(defaultValue = "10") int size) {
         return itemService.getAllToOwner(owner, from, size);
     }
 
@@ -39,13 +40,13 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> searchItem(@RequestParam String text,
-                                          @RequestParam(defaultValue = "0")  int from,
-                                          @RequestParam(defaultValue = "10")  int size) {
+                                    @RequestParam(defaultValue = "0") int from,
+                                    @RequestParam(defaultValue = "10") int size) {
         return itemService.search(text, from, size);
     }
 
     @PostMapping("{itemId}/comment")
-    public CommentDto addComment(@RequestBody @Valid CommentDto commentDto, @RequestHeader("X-Sharer-User-Id") int owner,
+    public CommentDto addComment(@RequestBody CommentDto commentDto, @RequestHeader("X-Sharer-User-Id") int owner,
                                  @PathVariable int itemId) {
         return itemService.addComment(commentDto, owner, itemId);
     }

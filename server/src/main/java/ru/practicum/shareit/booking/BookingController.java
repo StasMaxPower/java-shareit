@@ -9,7 +9,6 @@ import ru.practicum.shareit.booking.dto.ResponseDto;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-@Validated
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
@@ -38,7 +37,7 @@ public class BookingController {
     @GetMapping
     public List<BookingDto> getAllBookingByUser(@RequestParam(defaultValue = "ALL") State state,
                                                 @RequestHeader("X-Sharer-User-Id") int userId,
-                                                @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                                @RequestParam(defaultValue = "0") int from,
                                                 @RequestParam(defaultValue = "10") int size) {
         return bookingService.getAllBookingByUser(userId, state, from, size);
     }
